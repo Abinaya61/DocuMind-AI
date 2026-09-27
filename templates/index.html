@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>DocuMind AI</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc,
+                    #ecfeff
+                );
+
+            color: #1e293b;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =========================================
+           MAIN CONTAINER
+        ========================================= */
+
+        .container {
+
+            width: 95%;
+
+            max-width: 1100px;
+
+            margin: 30px auto;
+
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            color: white;
+
+            padding: 35px;
+
+            border-radius: 24px;
+
+            text-align: center;
+
+            box-shadow:
+                0 15px 35px
+                rgba(79, 70, 229, 0.25);
+
+        }
+
+
+        .header-icon {
+
+            font-size: 55px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .header h1 {
+
+            margin: 5px 0;
+
+            font-size: 38px;
+
+        }
+
+
+        .header p {
+
+            margin: 10px 0 0;
+
+            font-size: 17px;
+
+            opacity: 0.9;
+
+        }
+
+
+        /* =========================================
+           GRID
+        ========================================= */
+
+        .main-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+
+            margin-top: 25px;
+
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.08);
+
+            border:
+                1px solid #e2e8f0;
+
+        }
+
+
+        .card h2 {
+
+            margin-top: 0;
+
+            color: #334155;
+
+        }
+
+
+        .card-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .card-title span {
+
+            font-size: 28px;
+
+        }
+
+
+        /* =========================================
+           UPLOAD AREA
+        ========================================= */
+
+        .upload-area {
+
+            border:
+                2px dashed #818cf8;
+
+            background: #eef2ff;
+
+            border-radius: 15px;
+
+            padding: 30px 20px;
+
+            text-align: center;
+
+            transition: 0.3s;
+
+        }
+
+
+        .upload-area:hover {
+
+            background: #e0e7ff;
+
+            border-color: #4f46e5;
+
+        }
+
+
+        .upload-icon {
+
+            font-size: 45px;
+
+        }
+
+
+        input[type="file"] {
+
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 10px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            background: white;
+
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
+        button {
+
+            border: none;
+
+            padding: 12px 18px;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+        }
+
+
+        .primary-btn {
+
+            width: 100%;
+
+            margin-top: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #6366f1
+                );
+
+            color: white;
+
+        }
+
+
+        .primary-btn:hover {
+
+            box-shadow:
+                0 8px 18px
+                rgba(79, 70, 229, 0.3);
+
+        }
+
+
+        .voice-btn {
+
+            width: 50px;
+
+            height: 50px;
+
+            padding: 0;
+
+            background: #059669;
+
+            color: white;
+
+            font-size: 21px;
+
+        }
+
+
+        .voice-btn:hover {
+
+            background: #047857;
+
+        }
+
+
+        .ask-btn {
+
+            background: #4f46e5;
+
+            color: white;
+
+        }
+
+
+        .clear-btn {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+        }
+
+
+        .read-btn {
+
+            background: #ede9fe;
+
+            color: #6d28d9;
+
+        }
+
+
+        .stop-btn {
+
+            background: #fef3c7;
+
+            color: #92400e;
+
+        }
+
+
+        /* =========================================
+           QUESTION INPUT
+        ========================================= */
+
+        .question-area {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+
+        }
+
+
+        #question {
+
+            flex: 1;
+
+            height: 50px;
+
+            padding: 0 15px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+
+        #question:focus {
+
+            border-color: #6366f1;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99, 102, 241, 0.12);
+
+        }
+
+
+        .question-buttons {
+
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .question-buttons button {
+
+            flex: 1;
+
+        }
+
+
+        /* =========================================
+           VOICE STATUS
+        ========================================= */
+
+        .voice-status {
+
+            margin-top: 10px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            min-height: 18px;
+
+        }
+
+
+        /* =========================================
+           RESULT
+        ========================================= */
+
+        #result {
+
+            margin-top: 25px;
+
+        }
+
+
+        .success-box {
+
+            background: #ecfdf5;
+
+            border:
+                1px solid #86efac;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+        }
+
+
+        .success-box h3 {
+
+            color: #047857;
+
+            margin-top: 0;
+
+        }
+
+
+        .success-box ul {
+
+            padding-left: 20px;
+
+        }
+
+
+        /* =========================================
+           ANSWER SECTION
+        ========================================= */
+
+        .answer-section {
+
+            margin-top: 25px;
+
+        }
+
+
+        .answer-box {
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            border-left:
+                6px solid #4f46e5;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.08);
+
+        }
+
+
+        .answer-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #4338ca;
+
+        }
+
+
+        .answer-text {
+
+            font-size: 17px;
+
+            line-height: 1.7;
+
+            color: #334155;
+
+            background: #f8fafc;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .answer-buttons {
+
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 15px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        /* =========================================
+           SOURCE
+        ========================================= */
+
+        .source-box {
+
+            margin-top: 20px;
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+        }
+
+
+        .source-title {
+
+            font-weight: 700;
+
+            color: #334155;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .source-item {
+
+            background: white;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-top: 8px;
+
+            border-left:
+                4px solid #6366f1;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================================
+           CHAT HISTORY
+        ========================================= */
+
+        .history-section {
+
+            margin-top: 25px;
+
+        }
+
+
+        .history-empty {
+
+            text-align: center;
+
+            color: #64748b;
+
+            padding: 20px;
+
+        }
+
+
+        .chat-item {
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 15px;
+
+            padding: 18px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .question-history {
+
+            background: #eef2ff;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+        }
+
+
+        .answer-history {
+
+            background: #ecfdf5;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            margin-top: 10px;
+
+        }
+
+
+        .history-buttons {
+
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 10px;
+
+        }
+
+
+        /* =========================================
+           LOADING
+        ========================================= */
+
+        .loading {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #4f46e5;
+
+            font-weight: 600;
+
+        }
+
+
+        .error {
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 800px) {
+
+            .main-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .header h1 {
+
+                font-size: 30px;
+
+            }
+
+
+            .question-area {
+
+                flex-direction: column;
+
+            }
+
+
+            #question {
+
+                width: 100%;
+
+            }
+
+
+            .voice-btn {
+
+                width: 100%;
+
+                height: 45px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
+
+    <div class="header">
+
+        <div class="header-icon">
+            📚
+        </div>
+
+
+        <h1>
+            DocuMind AI
+        </h1>
+
+
+        <p>
+            Intelligent PDF Question Answering Assistant
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         MAIN GRID
+    ========================================= -->
+
+    <div class="main-grid">
+
+
+        <!-- =====================================
+             UPLOAD CARD
+        ===================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <span>📄</span>
+
+                <h2>
+                    Upload Documents
+                </h2>
+
+            </div>
+
+
+            <div class="upload-area">
+
+                <div class="upload-icon">
+                    📁
+                </div>
+
+
+                <p>
+                    Upload one or more PDF documents
+                </p>
+
+
+                <input
+                    type="file"
+                    id="pdfFile"
+                    accept=".pdf"
+                    multiple
+                >
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="uploadPDFs()"
+            >
+
+                📤 Upload PDFs
+
+            </button>
+
+
+            <div id="result"></div>
+
+        </div>
+
+
+        <!-- =====================================
+             QUESTION CARD
+        ===================================== -->
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <span>💬</span>
+
+                <h2>
+                    Ask DocuMind
+                </h2>
+
+            </div>
+
+
+            <div class="question-area">
+
+
+                <input
+                    type="text"
+                    id="question"
+                    placeholder="Ask something about your PDF..."
+                >
+
+
+                <button
+                    class="voice-btn"
+                    onclick="startVoiceInput()"
+                    title="Voice Input"
+                >
+
+                    🎤
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="voiceStatus"
+                class="voice-status"
+            ></div>
+
+
+            <div class="question-buttons">
+
+
+                <button
+                    class="ask-btn"
+                    onclick="askQuestion()"
+                >
+
+                    🔍 Ask Question
+
+                </button>
+
+
+                <button
+                    class="clear-btn"
+                    onclick="clearChat()"
+                >
+
+                    🗑️ Clear Chat
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         CURRENT ANSWER
+    ========================================= -->
+
+    <div
+        class="answer-section"
+        id="answer"
+    ></div>
+
+
+    <!-- =========================================
+         CHAT HISTORY
+    ========================================= -->
+
+    <div class="card history-section">
+
+        <div class="card-title">
+
+            <span>🕘</span>
+
+            <h2>
+                Chat History
+            </h2>
+
+        </div>
+
+
+        <div id="chatHistory">
+
+            <div class="history-empty">
+
+                💬 No questions asked yet.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
+
+    <div class="footer">
+
+        DocuMind AI • Intelligent PDF Question Answering System
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+// =================================================
+// CHAT HISTORY
+// =================================================
+
+let chatHistory = [];
+
+
+// =================================================
+// UPLOAD PDFs
+// =================================================
+
+async function uploadPDFs() {
+
+
+    const fileInput =
+        document.getElementById(
+            "pdfFile"
+        );
+
+
+    const result =
+        document.getElementById(
+            "result"
+        );
+
+
+    if (
+        fileInput.files.length === 0
+    ) {
+
+
+        result.innerHTML = `
+
+            <div class="error">
+
+                ❌ Please select at least one PDF.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const formData =
+        new FormData();
+
+
+    for (
+        let i = 0;
+        i < fileInput.files.length;
+        i++
+    ) {
+
+
+        formData.append(
+            "pdf",
+            fileInput.files[i]
+        );
+
+    }
+
+
+    result.innerHTML = `
+
+        <div class="loading">
+
+            ⏳ Processing PDF documents...
+
+        </div>
+
+    `;
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+
+            let filesHTML = "";
+
+
+            data.files.forEach(
+                function(file) {
+
+                    filesHTML += `
+
+                        <li>
+                            📄 ${escapeHtml(file)}
+                        </li>
+
+                    `;
+
+                }
+            );
+
+
+            result.innerHTML = `
+
+                <div class="success-box">
+
+                    <h3>
+                        ✅ Upload Successful
+                    </h3>
+
+
+                    <p>
+                        <b>Files:</b>
+                    </p>
+
+
+                    <ul>
+                        ${filesHTML}
+                    </ul>
+
+
+                    <p>
+                        📑 <b>Total Pages:</b>
+                        ${data.pages}
+                    </p>
+
+
+                    <p>
+                        📝 <b>Characters:</b>
+                        ${data.text_length}
+                    </p>
+
+
+                    <p>
+                        🧩 <b>Chunks:</b>
+                        ${data.chunks}
+                    </p>
+
+                </div>
+
+            `;
+
+
+        } else {
+
+
+            result.innerHTML = `
+
+                <div class="error">
+
+                    ❌ ${escapeHtml(data.message)}
+
+                </div>
+
+            `;
+
+        }
+
+
+    } catch (error) {
+
+
+        console.error(error);
+
+
+        result.innerHTML = `
+
+            <div class="error">
+
+                ❌ Unable to connect to Flask server.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// =================================================
+// VOICE INPUT
+// =================================================
+
+function startVoiceInput() {
+
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+
+        alert(
+            "Voice input is not supported in this browser."
+        );
+
+
+        return;
+
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        "en-IN";
+
+
+    recognition.continuous =
+        false;
+
+
+    recognition.interimResults =
+        false;
+
+
+    const question =
+        document.getElementById(
+            "question"
+        );
+
+
+    const status =
+        document.getElementById(
+            "voiceStatus"
+        );
+
+
+    recognition.start();
+
+
+    recognition.onstart =
+        function() {
+
+            status.innerText =
+                "🎤 Listening...";
+
+            status.style.color =
+                "#dc2626";
+
+        };
+
+
+    recognition.onresult =
+        function(event) {
+
+
+            const text =
+                event
+                    .results[0][0]
+                    .transcript;
+
+
+            question.value =
+                text;
+
+
+            status.innerText =
+                "✅ Voice captured";
+
+            status.style.color =
+                "#059669";
+
+        };
+
+
+    recognition.onerror =
+        function(event) {
+
+
+            console.error(
+                "Voice input error:",
+                event.error
+            );
+
+
+            status.innerText =
+                "❌ Voice input failed";
+
+            status.style.color =
+                "#dc2626";
+
+        };
+
+
+    recognition.onend =
+        function() {
+
+            setTimeout(
+                function() {
+
+                    status.innerText = "";
+
+                },
+                2000
+            );
+
+        };
+
+}
+
+
+// =================================================
+// ASK QUESTION
+// =================================================
+
+async function askQuestion() {
+
+
+    const questionInput =
+        document.getElementById(
+            "question"
+        );
+
+
+    const answerBox =
+        document.getElementById(
+            "answer"
+        );
+
+
+    const question =
+        questionInput.value.trim();
+
+
+    if (!question) {
+
+
+        answerBox.innerHTML = `
+
+            <div class="error">
+
+                ❌ Please enter a question.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    answerBox.innerHTML = `
+
+        <div class="card loading">
+
+            🤖 Searching documents and generating answer...
+
+        </div>
+
+    `;
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "/ask",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+                            question:
+                                question
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (data.success) {
+
+
+            displayAnswer(data);
+
+
+            chatHistory.push({
+
+                question:
+                    question,
+
+                answer:
+                    data.answer,
+
+                sources:
+                    data.sources
+
+            });
+
+
+            displayChatHistory();
+
+
+            questionInput.value = "";
+
+
+        } else {
+
+
+            answerBox.innerHTML = `
+
+                <div class="error">
+
+                    ❌ ${escapeHtml(
+                        data.message
+                    )}
+
+                </div>
+
+            `;
+
+        }
+
+
+    } catch (error) {
+
+
+        console.error(error);
+
+
+        answerBox.innerHTML = `
+
+            <div class="error">
+
+                ❌ Server connection error.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+// =================================================
+// DISPLAY CURRENT ANSWER
+// =================================================
+
+function displayAnswer(data) {
+
+
+    const answerBox =
+        document.getElementById(
+            "answer"
+        );
+
+
+    answerBox.innerHTML = `
+
+        <div class="answer-box">
+
+
+            <div class="answer-title">
+
+                <span style="font-size:28px;">
+                    🤖
+                </span>
+
+                <h2>
+                    Answer
+                </h2>
+
+            </div>
+
+
+            <div
+                class="answer-text"
+                id="currentAnswerText"
+            >
+
+                ${escapeHtml(
+                    data.answer
+                )}
+
+            </div>
+
+
+            <div class="answer-buttons">
+
+
+                <button
+                    class="read-btn"
+                    onclick="speakCurrentAnswer()"
+                >
+
+                    🔊 Read Answer
+
+                </button>
+
+
+                <button
+                    class="stop-btn"
+                    onclick="stopSpeaking()"
+                >
+
+                    ⏹️ Stop
+
+                </button>
+
+            </div>
+
+
+            <div class="source-box">
+
+
+                <div class="source-title">
+
+                    📚 Source Information
+
+                </div>
+
+
+                ${createSources(
+                    data.sources
+                )}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// =================================================
+// CREATE SOURCE DETAILS
+// =================================================
+
+function createSources(sources) {
+
+
+    if (
+        !sources ||
+        sources.length === 0
+    ) {
+
+
+        return `
+
+            <p>
+                No source information available.
+            </p>
+
+        `;
+
+    }
+
+
+    let html = "";
+
+
+    sources.forEach(
+        function(source) {
+
+
+            html += `
+
+                <div class="source-item">
+
+                    📄 <b>Source:</b>
+                    ${escapeHtml(source.file)}
+
+                    <br><br>
+
+                    📑 <b>Page:</b>
+                    ${source.page}
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    return html;
+
+}
+
+
+// =================================================
+// DISPLAY CHAT HISTORY
+// =================================================
+
+function displayChatHistory() {
+
+
+    const history =
+        document.getElementById(
+            "chatHistory"
+        );
+
+
+    if (
+        chatHistory.length === 0
+    ) {
+
+
+        history.innerHTML = `
+
+            <div class="history-empty">
+
+                💬 No questions asked yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    chatHistory.forEach(
+        function(chat, index) {
+
+
+            html += `
+
+                <div class="chat-item">
+
+
+                    <div class="question-history">
+
+                        👤 <b>Question ${index + 1}</b>
+
+
+                        <p>
+
+                            ${escapeHtml(
+                                chat.question
+                            )}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="answer-history">
+
+                        🤖 <b>Answer</b>
+
+
+                        <p>
+
+                            ${escapeHtml(
+                                chat.answer
+                            )}
+
+                        </p>
+
+
+                        <div class="history-buttons">
+
+
+                            <button
+                                class="read-btn"
+                                onclick="speakTextFromHistory(${index})"
+                            >
+
+                                🔊 Read
+
+                            </button>
+
+
+                            <button
+                                class="stop-btn"
+                                onclick="stopSpeaking()"
+                            >
+
+                                ⏹️ Stop
+
+                            </button>
+
+
+                        </div>
+
+
+                        <div class="source-box">
+
+                            <div class="source-title">
+
+                                📚 Source Information
+
+                            </div>
+
+
+                            ${createSources(
+                                chat.sources
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    history.innerHTML =
+        html;
+
+}
+
+
+// =================================================
+// SPEAK CURRENT ANSWER
+// =================================================
+
+function speakCurrentAnswer() {
+
+
+    const element =
+        document.getElementById(
+            "currentAnswerText"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    const text =
+        element.innerText.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    speakText(text);
+
+}
+
+
+// =================================================
+// SPEAK HISTORY ANSWER
+// =================================================
+
+function speakTextFromHistory(index) {
+
+
+    if (
+        !chatHistory[index]
+    ) {
+
+        return;
+
+    }
+
+
+    speakText(
+        chatHistory[index].answer
+    );
+
+}
+
+
+// =================================================
+// VOICE OUTPUT
+// =================================================
+
+function speakText(text) {
+
+
+    if (
+        !window.speechSynthesis ||
+        !window.SpeechSynthesisUtterance
+    ) {
+
+
+        alert(
+            "Voice output is not supported in this browser."
+        );
+
+
+        return;
+
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+
+    function speakNow() {
+
+
+        const availableVoices =
+            window.speechSynthesis.getVoices();
+
+
+        const speech =
+            new SpeechSynthesisUtterance(
+                text
+            );
+
+
+        const indianVoice =
+            availableVoices.find(
+                function(voice) {
+
+                    return voice.lang
+                        .toLowerCase()
+                        .startsWith("en-in");
+
+                }
+            );
+
+
+        const englishVoice =
+            availableVoices.find(
+                function(voice) {
+
+                    return voice.lang
+                        .toLowerCase()
+                        .startsWith("en");
+
+                }
+            );
+
+
+        if (indianVoice) {
+
+            speech.voice =
+                indianVoice;
+
+        }
+        else if (englishVoice) {
+
+            speech.voice =
+                englishVoice;
+
+        }
+
+
+        speech.lang =
+            "en-IN";
+
+
+        speech.rate =
+            0.9;
+
+
+        speech.pitch =
+            1;
+
+
+        speech.volume =
+            1;
+
+
+        speech.onstart =
+            function() {
+
+                console.log(
+                    "🔊 Speech started"
+                );
+
+            };
+
+
+        speech.onend =
+            function() {
+
+                console.log(
+                    "🔊 Speech completed"
+                );
+
+            };
+
+
+        speech.onerror =
+            function(event) {
+
+                console.error(
+                    "Speech error:",
+                    event.error
+                );
+
+            };
+
+
+        window.speechSynthesis.speak(
+            speech
+        );
+
+    }
+
+
+    if (
+        voices.length > 0
+    ) {
+
+        speakNow();
+
+    }
+    else {
+
+
+        window.speechSynthesis.onvoiceschanged =
+            function() {
+
+
+                speakNow();
+
+
+                window.speechSynthesis.onvoiceschanged =
+                    null;
+
+            };
+
+    }
+
+}
+
+
+// =================================================
+// STOP SPEAKING
+// =================================================
+
+function stopSpeaking() {
+
+
+    if (
+        window.speechSynthesis
+    ) {
+
+        window.speechSynthesis.cancel();
+
+    }
+
+}
+
+
+// =================================================
+// CLEAR CHAT
+// =================================================
+
+function clearChat() {
+
+
+    stopSpeaking();
+
+
+    chatHistory = [];
+
+
+    document.getElementById(
+        "answer"
+    ).innerHTML = "";
+
+
+    document.getElementById(
+        "chatHistory"
+    ).innerHTML = `
+
+        <div class="history-empty">
+
+            💬 No questions asked yet.
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "question"
+    ).value = "";
+
+
+    document.getElementById(
+        "voiceStatus"
+    ).innerText = "";
+
+}
+
+
+// =================================================
+// ESCAPE HTML
+// =================================================
+
+function escapeHtml(text) {
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+
+}
+
+
+// =================================================
+// ENTER KEY
+// =================================================
+
+document
+    .getElementById("question")
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                askQuestion();
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
