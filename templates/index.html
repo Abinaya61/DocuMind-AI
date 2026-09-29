@@ -10,22 +10,15 @@
 
     <title>DocuMind AI</title>
 
-
     <style>
 
         * {
             box-sizing: border-box;
         }
 
-
         body {
-
             margin: 0;
-
-            font-family:
-                "Segoe UI",
-                Arial,
-                sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
 
             background:
                 linear-gradient(
@@ -36,33 +29,18 @@
                 );
 
             color: #1e293b;
-
             min-height: 100vh;
-
         }
-
-
-        /* =========================================
-           MAIN CONTAINER
-        ========================================= */
 
         .container {
-
             width: 95%;
-
             max-width: 1100px;
-
             margin: 30px auto;
-
         }
 
-
-        /* =========================================
-           HEADER
-        ========================================= */
+        /* HEADER */
 
         .header {
-
             background:
                 linear-gradient(
                     135deg,
@@ -71,207 +49,114 @@
                 );
 
             color: white;
-
             padding: 35px;
-
             border-radius: 24px;
-
             text-align: center;
 
             box-shadow:
                 0 15px 35px
                 rgba(79, 70, 229, 0.25);
-
         }
-
 
         .header-icon {
-
             font-size: 55px;
-
-            margin-bottom: 5px;
-
         }
-
 
         .header h1 {
-
             margin: 5px 0;
-
             font-size: 38px;
-
         }
-
 
         .header p {
-
             margin: 10px 0 0;
-
             font-size: 17px;
-
             opacity: 0.9;
-
         }
 
-
-        /* =========================================
-           GRID
-        ========================================= */
+        /* GRID */
 
         .main-grid {
-
             display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
+            grid-template-columns: 1fr 1fr;
             gap: 25px;
-
             margin-top: 25px;
-
         }
 
-
-        /* =========================================
-           CARD
-        ========================================= */
+        /* CARD */
 
         .card {
-
             background: white;
-
             border-radius: 20px;
-
             padding: 25px;
 
             box-shadow:
                 0 8px 25px
                 rgba(15, 23, 42, 0.08);
 
-            border:
-                1px solid #e2e8f0;
-
+            border: 1px solid #e2e8f0;
         }
-
 
         .card h2 {
-
             margin-top: 0;
-
             color: #334155;
-
         }
-
 
         .card-title {
-
             display: flex;
-
             align-items: center;
-
             gap: 10px;
-
             margin-bottom: 20px;
-
         }
-
 
         .card-title span {
-
             font-size: 28px;
-
         }
 
-
-        /* =========================================
-           UPLOAD AREA
-        ========================================= */
+        /* UPLOAD */
 
         .upload-area {
-
-            border:
-                2px dashed #818cf8;
-
+            border: 2px dashed #818cf8;
             background: #eef2ff;
-
             border-radius: 15px;
 
             padding: 30px 20px;
-
             text-align: center;
-
-            transition: 0.3s;
-
         }
-
-
-        .upload-area:hover {
-
-            background: #e0e7ff;
-
-            border-color: #4f46e5;
-
-        }
-
 
         .upload-icon {
-
             font-size: 45px;
-
         }
 
-
         input[type="file"] {
-
             width: 100%;
-
             margin-top: 15px;
-
             padding: 10px;
 
             border: 1px solid #cbd5e1;
-
             border-radius: 8px;
-
             background: white;
-
         }
 
-
-        /* =========================================
-           BUTTONS
-        ========================================= */
+        /* BUTTONS */
 
         button {
-
             border: none;
-
             padding: 12px 18px;
-
             border-radius: 10px;
 
             font-size: 15px;
-
             font-weight: 600;
 
             cursor: pointer;
-
             transition: 0.2s;
-
         }
-
 
         button:hover {
-
             transform: translateY(-2px);
-
         }
 
-
         .primary-btn {
-
             width: 100%;
-
             margin-top: 15px;
 
             background:
@@ -282,247 +167,172 @@
                 );
 
             color: white;
-
         }
 
-
-        .primary-btn:hover {
-
-            box-shadow:
-                0 8px 18px
-                rgba(79, 70, 229, 0.3);
-
+        .ask-btn {
+            background: #4f46e5;
+            color: white;
         }
 
+        .clear-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
 
         .voice-btn {
-
-            width: 50px;
-
+            width: 52px;
             height: 50px;
-
             padding: 0;
 
             background: #059669;
-
             color: white;
 
             font-size: 21px;
-
         }
-
-
-        .voice-btn:hover {
-
-            background: #047857;
-
-        }
-
-
-        .ask-btn {
-
-            background: #4f46e5;
-
-            color: white;
-
-        }
-
-
-        .clear-btn {
-
-            background: #fee2e2;
-
-            color: #b91c1c;
-
-        }
-
 
         .read-btn {
-
             background: #ede9fe;
-
             color: #6d28d9;
-
         }
-
 
         .stop-btn {
-
             background: #fef3c7;
-
             color: #92400e;
-
         }
 
+        /* PDF LINK */
 
-        /* =========================================
-           QUESTION INPUT
-        ========================================= */
-
-        .question-area {
-
-            display: flex;
-
-            gap: 10px;
-
-            align-items: center;
-
+        .pdf-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
         }
 
+        .pdf-link:hover {
+            color: #4338ca;
+            text-decoration: underline;
+        }
 
-        #question {
+        /* QUESTION */
 
-            flex: 1;
+        .language-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
 
-            height: 50px;
+        #questionLanguage {
+            width: 100%;
+            height: 45px;
 
-            padding: 0 15px;
+            padding: 0 12px;
 
-            border:
-                1px solid #cbd5e1;
-
+            border: 1px solid #cbd5e1;
             border-radius: 10px;
 
             font-size: 15px;
+            margin-bottom: 15px;
 
             outline: none;
-
         }
 
+        .question-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #question {
+            flex: 1;
+
+            height: 50px;
+            padding: 0 15px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+
+            font-size: 15px;
+            outline: none;
+        }
 
         #question:focus {
-
             border-color: #6366f1;
 
             box-shadow:
                 0 0 0 3px
                 rgba(99, 102, 241, 0.12);
-
         }
-
 
         .question-buttons {
-
             display: flex;
-
             gap: 8px;
-
             margin-top: 15px;
-
         }
-
 
         .question-buttons button {
-
             flex: 1;
-
         }
-
-
-        /* =========================================
-           VOICE STATUS
-        ========================================= */
 
         .voice-status {
-
             margin-top: 10px;
-
             font-size: 13px;
-
             font-weight: 600;
-
             min-height: 18px;
-
         }
 
-
-        /* =========================================
-           RESULT
-        ========================================= */
+        /* RESULT */
 
         #result {
-
             margin-top: 25px;
-
         }
-
 
         .success-box {
-
             background: #ecfdf5;
-
-            border:
-                1px solid #86efac;
+            border: 1px solid #86efac;
 
             border-radius: 15px;
-
             padding: 20px;
-
         }
-
 
         .success-box h3 {
-
             color: #047857;
-
             margin-top: 0;
-
         }
-
 
         .success-box ul {
-
             padding-left: 20px;
-
         }
 
-
-        /* =========================================
-           ANSWER SECTION
-        ========================================= */
+        /* ANSWER */
 
         .answer-section {
-
             margin-top: 25px;
-
         }
 
-
         .answer-box {
-
             background: white;
 
             border-radius: 20px;
-
             padding: 25px;
 
-            border-left:
-                6px solid #4f46e5;
+            border-left: 6px solid #4f46e5;
 
             box-shadow:
                 0 8px 25px
                 rgba(15, 23, 42, 0.08);
-
         }
 
-
         .answer-title {
-
             display: flex;
-
             align-items: center;
 
             gap: 10px;
-
             color: #4338ca;
-
         }
 
-
         .answer-text {
-
             font-size: 17px;
-
             line-height: 1.7;
 
             color: #334155;
@@ -530,165 +340,107 @@
             background: #f8fafc;
 
             padding: 18px;
-
             border-radius: 12px;
 
             margin-top: 15px;
-
         }
 
-
         .answer-buttons {
-
             display: flex;
-
             gap: 8px;
-
             margin-top: 15px;
 
             flex-wrap: wrap;
-
         }
 
-
-        /* =========================================
-           SOURCE
-        ========================================= */
+        /* SOURCE */
 
         .source-box {
-
             margin-top: 20px;
 
             padding: 18px;
 
             background: #f8fafc;
-
             border-radius: 12px;
-
         }
 
-
         .source-title {
-
             font-weight: 700;
-
             color: #334155;
 
             margin-bottom: 10px;
-
         }
 
-
         .source-item {
-
             background: white;
 
             padding: 12px;
-
             border-radius: 8px;
 
             margin-top: 8px;
 
-            border-left:
-                4px solid #6366f1;
+            border-left: 4px solid #6366f1;
 
             font-size: 14px;
-
         }
 
-
-        /* =========================================
-           CHAT HISTORY
-        ========================================= */
+        /* HISTORY */
 
         .history-section {
-
             margin-top: 25px;
-
         }
-
 
         .history-empty {
-
             text-align: center;
-
             color: #64748b;
-
             padding: 20px;
-
         }
 
-
         .chat-item {
-
             background: #f8fafc;
 
-            border:
-                1px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
 
             border-radius: 15px;
 
             padding: 18px;
-
             margin-top: 15px;
-
         }
 
-
         .question-history {
-
             background: #eef2ff;
 
             padding: 12px;
-
             border-radius: 10px;
-
         }
 
-
         .answer-history {
-
             background: #ecfdf5;
 
             padding: 12px;
-
             border-radius: 10px;
 
             margin-top: 10px;
-
         }
-
 
         .history-buttons {
-
             display: flex;
-
             gap: 8px;
-
             margin-top: 10px;
-
         }
 
-
-        /* =========================================
-           LOADING
-        ========================================= */
+        /* LOADING */
 
         .loading {
-
             text-align: center;
 
             padding: 25px;
 
             color: #4f46e5;
-
             font-weight: 600;
-
         }
 
-
         .error {
-
             background: #fef2f2;
 
             color: #b91c1c;
@@ -698,16 +450,11 @@
             border-radius: 10px;
 
             font-weight: 600;
-
         }
 
-
-        /* =========================================
-           FOOTER
-        ========================================= */
+        /* FOOTER */
 
         .footer {
-
             text-align: center;
 
             padding: 25px;
@@ -715,52 +462,32 @@
             color: #64748b;
 
             font-size: 13px;
-
         }
 
-
-        /* =========================================
-           RESPONSIVE
-        ========================================= */
+        /* MOBILE */
 
         @media (max-width: 800px) {
 
             .main-grid {
-
                 grid-template-columns: 1fr;
-
             }
-
 
             .header h1 {
-
                 font-size: 30px;
-
             }
-
 
             .question-area {
-
                 flex-direction: column;
-
             }
-
 
             #question {
-
                 width: 100%;
-
             }
-
 
             .voice-btn {
-
                 width: 100%;
-
                 height: 45px;
-
             }
-
         }
 
     </style>
@@ -774,9 +501,7 @@
 <div class="container">
 
 
-    <!-- =========================================
-         HEADER
-    ========================================= -->
+    <!-- HEADER -->
 
     <div class="header">
 
@@ -784,11 +509,9 @@
             📚
         </div>
 
-
         <h1>
             DocuMind AI
         </h1>
-
 
         <p>
             Intelligent PDF Question Answering Assistant
@@ -797,16 +520,12 @@
     </div>
 
 
-    <!-- =========================================
-         MAIN GRID
-    ========================================= -->
+    <!-- MAIN GRID -->
 
     <div class="main-grid">
 
 
-        <!-- =====================================
-             UPLOAD CARD
-        ===================================== -->
+        <!-- UPLOAD CARD -->
 
         <div class="card">
 
@@ -827,11 +546,9 @@
                     📁
                 </div>
 
-
                 <p>
                     Upload one or more PDF documents
                 </p>
-
 
                 <input
                     type="file"
@@ -858,9 +575,7 @@
         </div>
 
 
-        <!-- =====================================
-             QUESTION CARD
-        ===================================== -->
+        <!-- QUESTION CARD -->
 
         <div class="card">
 
@@ -875,8 +590,35 @@
             </div>
 
 
-            <div class="question-area">
+            <!-- ONE LANGUAGE SELECTOR -->
 
+            <label
+                class="language-label"
+                for="questionLanguage"
+            >
+
+                Question Language
+
+            </label>
+
+
+            <select
+                id="questionLanguage"
+                onchange="changeLanguage()"
+            >
+
+                <option value="en-IN">
+                    🇬🇧 English
+                </option>
+
+                <option value="ta-IN">
+                    🇮🇳 தமிழ்
+                </option>
+
+            </select>
+
+
+            <div class="question-area">
 
                 <input
                     type="text"
@@ -906,7 +648,6 @@
 
             <div class="question-buttons">
 
-
                 <button
                     class="ask-btn"
                     onclick="askQuestion()"
@@ -933,9 +674,7 @@
     </div>
 
 
-    <!-- =========================================
-         CURRENT ANSWER
-    ========================================= -->
+    <!-- CURRENT ANSWER -->
 
     <div
         class="answer-section"
@@ -943,9 +682,7 @@
     ></div>
 
 
-    <!-- =========================================
-         CHAT HISTORY
-    ========================================= -->
+    <!-- CHAT HISTORY -->
 
     <div class="card history-section">
 
@@ -973,9 +710,7 @@
     </div>
 
 
-    <!-- =========================================
-         FOOTER
-    ========================================= -->
+    <!-- FOOTER -->
 
     <div class="footer">
 
@@ -999,11 +734,44 @@ let chatHistory = [];
 
 
 // =================================================
+// LANGUAGE CHANGE
+// =================================================
+
+function changeLanguage() {
+
+    const language =
+        document.getElementById(
+            "questionLanguage"
+        ).value;
+
+
+    const question =
+        document.getElementById(
+            "question"
+        );
+
+
+    if (language === "ta-IN") {
+
+        question.placeholder =
+            "உங்கள் PDF பற்றி கேள்வி கேளுங்கள்...";
+
+    }
+    else {
+
+        question.placeholder =
+            "Ask something about your PDF...";
+
+    }
+
+}
+
+
+// =================================================
 // UPLOAD PDFs
 // =================================================
 
 async function uploadPDFs() {
-
 
     const fileInput =
         document.getElementById(
@@ -1020,7 +788,6 @@ async function uploadPDFs() {
     if (
         fileInput.files.length === 0
     ) {
-
 
         result.innerHTML = `
 
@@ -1047,7 +814,6 @@ async function uploadPDFs() {
         i++
     ) {
 
-
         formData.append(
             "pdf",
             fileInput.files[i]
@@ -1069,7 +835,6 @@ async function uploadPDFs() {
 
     try {
 
-
         const response =
             await fetch(
                 "/upload",
@@ -1086,17 +851,32 @@ async function uploadPDFs() {
 
         if (data.success) {
 
-
             let filesHTML = "";
 
 
             data.files.forEach(
                 function(file) {
 
+                    const pdfUrl =
+                        "/uploads/" +
+                        encodeURIComponent(file);
+
+
                     filesHTML += `
 
                         <li>
-                            📄 ${escapeHtml(file)}
+
+                            📄
+
+                            <a
+                                href="${pdfUrl}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="pdf-link"
+                            >
+                                ${escapeHtml(file)}
+                            </a>
+
                         </li>
 
                     `;
@@ -1125,29 +905,34 @@ async function uploadPDFs() {
 
 
                     <p>
+
                         📑 <b>Total Pages:</b>
                         ${data.pages}
+
                     </p>
 
 
                     <p>
+
                         📝 <b>Characters:</b>
                         ${data.text_length}
+
                     </p>
 
 
                     <p>
+
                         🧩 <b>Chunks:</b>
                         ${data.chunks}
+
                     </p>
 
                 </div>
 
             `;
 
-
-        } else {
-
+        }
+        else {
 
             result.innerHTML = `
 
@@ -1161,9 +946,8 @@ async function uploadPDFs() {
 
         }
 
-
-    } catch (error) {
-
+    }
+    catch (error) {
 
         console.error(error);
 
@@ -1189,7 +973,6 @@ async function uploadPDFs() {
 
 function startVoiceInput() {
 
-
     const SpeechRecognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
@@ -1197,15 +980,19 @@ function startVoiceInput() {
 
     if (!SpeechRecognition) {
 
-
         alert(
             "Voice input is not supported in this browser."
         );
 
-
         return;
 
     }
+
+
+    const selectedLanguage =
+        document.getElementById(
+            "questionLanguage"
+        ).value;
 
 
     const recognition =
@@ -1213,7 +1000,7 @@ function startVoiceInput() {
 
 
     recognition.lang =
-        "en-IN";
+        selectedLanguage;
 
 
     recognition.continuous =
@@ -1243,7 +1030,9 @@ function startVoiceInput() {
         function() {
 
             status.innerText =
-                "🎤 Listening...";
+                selectedLanguage === "ta-IN"
+                    ? "🎤 கேட்கிறது..."
+                    : "🎤 Listening...";
 
             status.style.color =
                 "#dc2626";
@@ -1253,7 +1042,6 @@ function startVoiceInput() {
 
     recognition.onresult =
         function(event) {
-
 
             const text =
                 event
@@ -1266,7 +1054,9 @@ function startVoiceInput() {
 
 
             status.innerText =
-                "✅ Voice captured";
+                selectedLanguage === "ta-IN"
+                    ? "✅ குரல் பெறப்பட்டது"
+                    : "✅ Voice captured";
 
             status.style.color =
                 "#059669";
@@ -1277,7 +1067,6 @@ function startVoiceInput() {
     recognition.onerror =
         function(event) {
 
-
             console.error(
                 "Voice input error:",
                 event.error
@@ -1285,7 +1074,9 @@ function startVoiceInput() {
 
 
             status.innerText =
-                "❌ Voice input failed";
+                selectedLanguage === "ta-IN"
+                    ? "❌ குரல் உள்ளீடு தோல்வியடைந்தது"
+                    : "❌ Voice input failed";
 
             status.style.color =
                 "#dc2626";
@@ -1316,7 +1107,6 @@ function startVoiceInput() {
 
 async function askQuestion() {
 
-
     const questionInput =
         document.getElementById(
             "question"
@@ -1329,12 +1119,17 @@ async function askQuestion() {
         );
 
 
+    const language =
+        document.getElementById(
+            "questionLanguage"
+        ).value;
+
+
     const question =
         questionInput.value.trim();
 
 
     if (!question) {
-
 
         answerBox.innerHTML = `
 
@@ -1364,7 +1159,6 @@ async function askQuestion() {
 
     try {
 
-
         const response =
             await fetch(
                 "/ask",
@@ -1381,8 +1175,13 @@ async function askQuestion() {
 
                     body:
                         JSON.stringify({
+
                             question:
-                                question
+                                question,
+
+                            language:
+                                language
+
                         })
 
                 }
@@ -1394,7 +1193,6 @@ async function askQuestion() {
 
 
         if (data.success) {
-
 
             displayAnswer(data);
 
@@ -1408,7 +1206,10 @@ async function askQuestion() {
                     data.answer,
 
                 sources:
-                    data.sources
+                    data.sources,
+
+                language:
+                    language
 
             });
 
@@ -1418,9 +1219,8 @@ async function askQuestion() {
 
             questionInput.value = "";
 
-
-        } else {
-
+        }
+        else {
 
             answerBox.innerHTML = `
 
@@ -1436,9 +1236,8 @@ async function askQuestion() {
 
         }
 
-
-    } catch (error) {
-
+    }
+    catch (error) {
 
         console.error(error);
 
@@ -1463,7 +1262,6 @@ async function askQuestion() {
 // =================================================
 
 function displayAnswer(data) {
-
 
     const answerBox =
         document.getElementById(
@@ -1503,7 +1301,6 @@ function displayAnswer(data) {
 
             <div class="answer-buttons">
 
-
                 <button
                     class="read-btn"
                     onclick="speakCurrentAnswer()"
@@ -1527,7 +1324,6 @@ function displayAnswer(data) {
 
 
             <div class="source-box">
-
 
                 <div class="source-title">
 
@@ -1555,12 +1351,10 @@ function displayAnswer(data) {
 
 function createSources(sources) {
 
-
     if (
         !sources ||
         sources.length === 0
     ) {
-
 
         return `
 
@@ -1579,17 +1373,38 @@ function createSources(sources) {
     sources.forEach(
         function(source) {
 
+            const pdfUrl =
+                "/uploads/" +
+                encodeURIComponent(
+                    source.file
+                );
+
 
             html += `
 
                 <div class="source-item">
 
                     📄 <b>Source:</b>
-                    ${escapeHtml(source.file)}
+
+                    <a
+                        href="${pdfUrl}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="pdf-link"
+                    >
+
+                        ${escapeHtml(
+                            source.file
+                        )}
+
+                    </a>
+
 
                     <br><br>
 
+
                     📑 <b>Page:</b>
+
                     ${source.page}
 
                 </div>
@@ -1611,7 +1426,6 @@ function createSources(sources) {
 
 function displayChatHistory() {
 
-
     const history =
         document.getElementById(
             "chatHistory"
@@ -1621,7 +1435,6 @@ function displayChatHistory() {
     if (
         chatHistory.length === 0
     ) {
-
 
         history.innerHTML = `
 
@@ -1644,7 +1457,6 @@ function displayChatHistory() {
     chatHistory.forEach(
         function(chat, index) {
 
-
             html += `
 
                 <div class="chat-item">
@@ -1652,7 +1464,11 @@ function displayChatHistory() {
 
                     <div class="question-history">
 
-                        👤 <b>Question ${index + 1}</b>
+                        👤
+
+                        <b>
+                            Question ${index + 1}
+                        </b>
 
 
                         <p>
@@ -1682,7 +1498,6 @@ function displayChatHistory() {
 
                         <div class="history-buttons">
 
-
                             <button
                                 class="read-btn"
                                 onclick="speakTextFromHistory(${index})"
@@ -1701,7 +1516,6 @@ function displayChatHistory() {
                                 ⏹️ Stop
 
                             </button>
-
 
                         </div>
 
@@ -1743,7 +1557,6 @@ function displayChatHistory() {
 
 function speakCurrentAnswer() {
 
-
     const element =
         document.getElementById(
             "currentAnswerText"
@@ -1751,9 +1564,7 @@ function speakCurrentAnswer() {
 
 
     if (!element) {
-
         return;
-
     }
 
 
@@ -1762,13 +1573,20 @@ function speakCurrentAnswer() {
 
 
     if (!text) {
-
         return;
-
     }
 
 
-    speakText(text);
+    const language =
+        document.getElementById(
+            "questionLanguage"
+        ).value;
+
+
+    speakText(
+        text,
+        language
+    );
 
 }
 
@@ -1779,18 +1597,14 @@ function speakCurrentAnswer() {
 
 function speakTextFromHistory(index) {
 
-
-    if (
-        !chatHistory[index]
-    ) {
-
+    if (!chatHistory[index]) {
         return;
-
     }
 
 
     speakText(
-        chatHistory[index].answer
+        chatHistory[index].answer,
+        chatHistory[index].language || "en-IN"
     );
 
 }
@@ -1800,19 +1614,16 @@ function speakTextFromHistory(index) {
 // VOICE OUTPUT
 // =================================================
 
-function speakText(text) {
-
+function speakText(text, language) {
 
     if (
         !window.speechSynthesis ||
         !window.SpeechSynthesisUtterance
     ) {
 
-
         alert(
             "Voice output is not supported in this browser."
         );
-
 
         return;
 
@@ -1822,14 +1633,9 @@ function speakText(text) {
     window.speechSynthesis.cancel();
 
 
-    const voices =
-        window.speechSynthesis.getVoices();
-
-
     function speakNow() {
 
-
-        const availableVoices =
+        const voices =
             window.speechSynthesis.getVoices();
 
 
@@ -1839,58 +1645,73 @@ function speakText(text) {
             );
 
 
-        const indianVoice =
-            availableVoices.find(
-                function(voice) {
-
-                    return voice.lang
-                        .toLowerCase()
-                        .startsWith("en-in");
-
-                }
-            );
+        let selectedVoice = null;
 
 
-        const englishVoice =
-            availableVoices.find(
-                function(voice) {
+        if (language === "ta-IN") {
 
-                    return voice.lang
-                        .toLowerCase()
-                        .startsWith("en");
+            selectedVoice =
+                voices.find(
+                    function(voice) {
 
-                }
-            );
+                        return voice.lang
+                            .toLowerCase()
+                            .startsWith("ta");
 
+                    }
+                );
 
-        if (indianVoice) {
-
-            speech.voice =
-                indianVoice;
+            speech.lang = "ta-IN";
 
         }
-        else if (englishVoice) {
+        else {
 
-            speech.voice =
-                englishVoice;
+            selectedVoice =
+                voices.find(
+                    function(voice) {
+
+                        return voice.lang
+                            .toLowerCase()
+                            .startsWith("en-in");
+
+                    }
+                );
+
+
+            if (!selectedVoice) {
+
+                selectedVoice =
+                    voices.find(
+                        function(voice) {
+
+                            return voice.lang
+                                .toLowerCase()
+                                .startsWith("en");
+
+                        }
+                    );
+
+            }
+
+
+            speech.lang = "en-IN";
 
         }
 
 
-        speech.lang =
-            "en-IN";
+        if (selectedVoice) {
+
+            speech.voice =
+                selectedVoice;
+
+        }
 
 
-        speech.rate =
-            0.9;
+        speech.rate = 0.9;
 
+        speech.pitch = 1;
 
-        speech.pitch =
-            1;
-
-
-        speech.volume =
-            1;
+        speech.volume = 1;
 
 
         speech.onstart =
@@ -1931,22 +1752,21 @@ function speakText(text) {
     }
 
 
-    if (
-        voices.length > 0
-    ) {
+    const voices =
+        window.speechSynthesis.getVoices();
+
+
+    if (voices.length > 0) {
 
         speakNow();
 
     }
     else {
 
-
         window.speechSynthesis.onvoiceschanged =
             function() {
 
-
                 speakNow();
-
 
                 window.speechSynthesis.onvoiceschanged =
                     null;
@@ -1964,7 +1784,6 @@ function speakText(text) {
 
 function stopSpeaking() {
 
-
     if (
         window.speechSynthesis
     ) {
@@ -1981,7 +1800,6 @@ function stopSpeaking() {
 // =================================================
 
 function clearChat() {
-
 
     stopSpeaking();
 
@@ -2025,7 +1843,6 @@ function clearChat() {
 
 function escapeHtml(text) {
 
-
     const div =
         document.createElement(
             "div"
@@ -2033,7 +1850,7 @@ function escapeHtml(text) {
 
 
     div.textContent =
-        text;
+        text ?? "";
 
 
     return div.innerHTML;
@@ -2061,6 +1878,13 @@ document
 
         }
     );
+
+
+// =================================================
+// INITIAL LANGUAGE
+// =================================================
+
+changeLanguage();
 
 
 </script>

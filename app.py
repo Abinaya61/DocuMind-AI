@@ -1,39 +1,64 @@
-from flask import Flask, render_template, request, jsonify
+from flask import (
+    Flask,
+    render_template,
+    request,
+    jsonify,
+    send_from_directory
+)
+
 from pypdf import PdfReader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from sentence_transformers import SentenceTransformer
+
+from langchain_text_splitters import (
+    RecursiveCharacterTextSplitter
+)
+
 from google import genai
+from google.genai import types
 
 import faiss
 import os
+import re
+import numpy as np
 
+
+# =========================================================
+# FLASK APP
+# =========================================================
 
 app = Flask(__name__)
 
 
-# =====================================================
-# 1. GEMINI SETUP
-# =====================================================
+# =========================================================
+# GEMINI API SETUP
+# =========================================================
 
 api_key = os.environ.get("GEMINI_API_KEY")
+
+if not api_key:
+    raise RuntimeError(
+        "GEMINI_API_KEY is not set."
+    )
+
 
 client = genai.Client(
     api_key=api_key
 )
 
 
-# =====================================================
-# 2. SENTENCE TRANSFORMER
-# =====================================================
+# =========================================================
+# GEMINI MODELS
+# =========================================================
 
-model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
+GENERATION_MODEL = "gemini-3.8-flash"
+
+EMBEDDING_MODEL = "gemini-embedding-001"
+
+EMBEDDING_DIMENSION = 768
 
 
-# =====================================================
-# 3. UPLOAD FOLDER
-# =====================================================
+# =========================================================
+# UPLOAD FOLDER
+# =========================================================
 
 UPLOAD_FOLDER = "uploads"
 
@@ -45,9 +70,9 @@ os.makedirs(
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# =====================================================
-# 4. GLOBAL VARIABLES
-# =====================================================
+# =========================================================
+# GLOBAL PDF DATA
+# =========================================================
 
 pdf_chunks = []
 
@@ -55,14 +80,86 @@ pdf_sources = []
 
 pdf_pages = []
 
-pdf_embeddings = None
-
 faiss_index = None
 
 
-# =====================================================
-# 5. HOME
-# =====================================================
+# =========================================================
+# CHECK TAMIL TEXT
+# =========================================================
+
+def is_tamil(text):
+
+    return bool(
+        re.search(
+            r"[\u0B80-\u0BFF]",
+            text or ""
+        )
+    )
+
+
+# =========================================================
+# CREATE GEMINI EMBEDDINGS
+# =========================================================
+
+def create_embeddings(
+    texts,
+    task_type
+):
+
+    all_vectors = []
+
+    batch_size = 50
+
+
+    for start in range(
+        0,
+        len(texts),
+        batch_size
+    ):
+
+        batch = texts[
+            start:start + batch_size
+        ]
+
+
+        response = client.models.embed_content(
+
+            model=EMBEDDING_MODEL,
+
+            contents=batch,
+
+            config=types.EmbedContentConfig(
+
+                task_type=task_type,
+
+                output_dimensionality=
+                    EMBEDDING_DIMENSION
+
+            )
+
+        )
+
+
+        vectors = [
+            item.values
+            for item in response.embeddings
+        ]
+
+
+        all_vectors.extend(
+            vectors
+        )
+
+
+    return np.asarray(
+        all_vectors,
+        dtype="float32"
+    )
+
+
+# =========================================================
+# HOME PAGE
+# =========================================================
 
 @app.route("/")
 def home():
@@ -72,9 +169,32 @@ def home():
     )
 
 
-# =====================================================
-# 6. MULTIPLE PDF UPLOAD
-# =====================================================
+# =========================================================
+# SERVE UPLOADED PDF FILES
+# =========================================================
+# This route is required so that when the user clicks
+# the uploaded PDF filename, the PDF opens in the browser.
+# =========================================================
+
+@app.route(
+    "/uploads/<path:filename>"
+)
+def uploaded_file(filename):
+
+    return send_from_directory(
+
+        app.config[
+            "UPLOAD_FOLDER"
+        ],
+
+        filename
+
+    )
+
+
+# =========================================================
+# UPLOAD PDFs
+# =========================================================
 
 @app.route(
     "/upload",
@@ -85,15 +205,16 @@ def upload_pdfs():
     global pdf_chunks
     global pdf_sources
     global pdf_pages
-    global pdf_embeddings
     global faiss_index
 
 
-    # ---------------------------------------------
-    # Get uploaded files
-    # ---------------------------------------------
+    # -----------------------------------------------------
+    # GET FILES
+    # -----------------------------------------------------
 
-    files = request.files.getlist("pdf")
+    files = request.files.getlist(
+        "pdf"
+    )
 
 
     if not files:
@@ -103,14 +224,14 @@ def upload_pdfs():
             "success": False,
 
             "message":
-                "Please select at least one PDF"
+                "Please select at least one PDF."
 
         })
 
 
-    # ---------------------------------------------
-    # Reset previous data
-    # ---------------------------------------------
+    # -----------------------------------------------------
+    # RESET OLD PDF DATA
+    # -----------------------------------------------------
 
     pdf_chunks = []
 
@@ -118,9 +239,12 @@ def upload_pdfs():
 
     pdf_pages = []
 
-    pdf_embeddings = None
-
     faiss_index = None
+
+
+    # -----------------------------------------------------
+    # VARIABLES
+    # -----------------------------------------------------
 
     all_text = ""
 
@@ -131,44 +255,67 @@ def upload_pdfs():
 
     try:
 
-        # =========================================
+        # -------------------------------------------------
+        # TEXT SPLITTER
+        # -------------------------------------------------
+
+        splitter = (
+            RecursiveCharacterTextSplitter(
+
+                chunk_size=500,
+
+                chunk_overlap=50
+
+            )
+        )
+
+
+        # -------------------------------------------------
         # PROCESS EACH PDF
-        # =========================================
+        # -------------------------------------------------
 
         for file in files:
 
 
-            if file.filename == "":
-                continue
-
-
-            # -------------------------------------
-            # Check PDF
-            # -------------------------------------
-
-            if not file.filename.lower().endswith(".pdf"):
+            if not file.filename:
 
                 continue
 
 
-            # -------------------------------------
-            # Save PDF
-            # -------------------------------------
+            # ---------------------------------------------
+            # CHECK PDF
+            # ---------------------------------------------
+
+            if not file.filename.lower().endswith(
+                ".pdf"
+            ):
+
+                continue
+
+
+            # ---------------------------------------------
+            # SAVE PDF
+            # ---------------------------------------------
 
             filepath = os.path.join(
 
-                app.config["UPLOAD_FOLDER"],
+                app.config[
+                    "UPLOAD_FOLDER"
+                ],
 
                 file.filename
 
             )
 
-            file.save(filepath)
+
+            file.save(
+                filepath
+            )
 
 
-            # -------------------------------------
-            # Read PDF
-            # -------------------------------------
+            # ---------------------------------------------
+            # READ PDF
+            # ---------------------------------------------
 
             reader = PdfReader(
                 filepath
@@ -185,64 +332,57 @@ def upload_pdfs():
             )
 
 
-            pdf_text = ""
-
-
-            # =====================================
+            # ---------------------------------------------
             # PROCESS EACH PAGE
-            # =====================================
+            # ---------------------------------------------
 
             for page_number, page in enumerate(
+
                 reader.pages,
+
                 start=1
+
             ):
 
 
-                # ---------------------------------
-                # Extract page text
-                # ---------------------------------
+                page_text = (
+                    page.extract_text()
+                    or ""
+                )
 
-                page_text = page.extract_text()
 
-
-                if not page_text:
+                if not page_text.strip():
 
                     continue
 
 
-                # ---------------------------------
-                # Store complete text
-                # ---------------------------------
+                # -----------------------------------------
+                # STORE TEXT
+                # -----------------------------------------
 
-                pdf_text += (
-                    page_text +
-                    "\n"
-                )
-
-
-                # =================================
-                # CHUNK THIS PAGE
-                # =================================
-
-                text_splitter = RecursiveCharacterTextSplitter(
-
-                    chunk_size=500,
-
-                    chunk_overlap=50
-
-                )
-
-
-                page_chunks = text_splitter.split_text(
+                all_text += (
                     page_text
+                    + "\n"
                 )
 
 
-                # =================================
-                # STORE CHUNKS + SOURCE + PAGE
-                # =================================
+                # -----------------------------------------
+                # SPLIT PAGE INTO CHUNKS
+                # -----------------------------------------
+
+                page_chunks = (
+                    splitter.split_text(
+                        page_text
+                    )
+                )
+
+
+                # -----------------------------------------
+                # STORE CHUNKS
+                # -----------------------------------------
 
                 for chunk in page_chunks:
+
 
                     pdf_chunks.append(
                         chunk
@@ -259,19 +399,9 @@ def upload_pdfs():
                     )
 
 
-            # -------------------------------------
-            # Add PDF text
-            # -------------------------------------
-
-            all_text += (
-                pdf_text +
-                "\n"
-            )
-
-
-        # =========================================
-        # CHECK CONTENT
-        # =========================================
+        # -------------------------------------------------
+        # CHECK EXTRACTED TEXT
+        # -------------------------------------------------
 
         if not pdf_chunks:
 
@@ -280,66 +410,58 @@ def upload_pdfs():
                 "success": False,
 
                 "message":
-                    "Could not extract text from the PDFs"
+                    "Could not extract text from the PDFs."
 
             })
 
 
-        # =========================================
-        # CREATE EMBEDDINGS
-        # =========================================
+        # -------------------------------------------------
+        # CREATE DOCUMENT EMBEDDINGS
+        # -------------------------------------------------
 
-        pdf_embeddings = model.encode(
+        document_embeddings = (
+            create_embeddings(
 
-            pdf_chunks,
+                pdf_chunks,
 
-            convert_to_numpy=True
+                "RETRIEVAL_DOCUMENT"
 
+            )
         )
 
 
-        # =========================================
-        # FLOAT32
-        # =========================================
-
-        pdf_embeddings = pdf_embeddings.astype(
-            "float32"
-        )
-
-
-        # =========================================
-        # NORMALIZE
-        # =========================================
+        # -------------------------------------------------
+        # NORMALIZE EMBEDDINGS
+        # -------------------------------------------------
 
         faiss.normalize_L2(
-            pdf_embeddings
+            document_embeddings
         )
 
 
-        # =========================================
+        # -------------------------------------------------
         # CREATE FAISS INDEX
-        # =========================================
+        # -------------------------------------------------
 
-        dimension = pdf_embeddings.shape[1]
-
-
-        faiss_index = faiss.IndexFlatIP(
-            dimension
+        faiss_index = (
+            faiss.IndexFlatIP(
+                document_embeddings.shape[1]
+            )
         )
 
 
-        # =========================================
-        # ADD EMBEDDINGS
-        # =========================================
+        # -------------------------------------------------
+        # ADD EMBEDDINGS TO FAISS
+        # -------------------------------------------------
 
         faiss_index.add(
-            pdf_embeddings
+            document_embeddings
         )
 
 
-        # =========================================
-        # SUCCESS RESPONSE
-        # =========================================
+        # -------------------------------------------------
+        # RETURN SUCCESS
+        # -------------------------------------------------
 
         return jsonify({
 
@@ -361,12 +483,13 @@ def upload_pdfs():
                 len(pdf_chunks),
 
             "message":
-                "Multiple PDFs uploaded successfully"
+                "Multiple PDFs uploaded successfully."
 
         })
 
 
     except Exception as e:
+
 
         return jsonify({
 
@@ -378,9 +501,9 @@ def upload_pdfs():
         })
 
 
-# =====================================================
-# 7. ASK QUESTION
-# =====================================================
+# =========================================================
+# ASK QUESTION
+# =========================================================
 
 @app.route(
     "/ask",
@@ -396,34 +519,44 @@ def ask_question():
 
     try:
 
-        # =========================================
-        # GET REQUEST
-        # =========================================
+        # -------------------------------------------------
+        # GET REQUEST DATA
+        # -------------------------------------------------
 
-        data = request.get_json()
-
-
-        if not data:
-
-            return jsonify({
-
-                "success": False,
-
-                "message":
-                    "Invalid request"
-
-            })
+        data = request.get_json(
+            silent=True
+        ) or {}
 
 
-        question = data.get(
-            "question",
-            ""
+        question = str(
+            data.get(
+                "question",
+                ""
+            )
         ).strip()
 
 
-        # =========================================
+        language = data.get(
+            "language",
+            "en-IN"
+        )
+
+
+        # -------------------------------------------------
+        # CHECK LANGUAGE
+        # -------------------------------------------------
+
+        if language not in (
+            "en-IN",
+            "ta-IN"
+        ):
+
+            language = "en-IN"
+
+
+        # -------------------------------------------------
         # CHECK QUESTION
-        # =========================================
+        # -------------------------------------------------
 
         if not question:
 
@@ -432,81 +565,81 @@ def ask_question():
                 "success": False,
 
                 "message":
-                    "Please enter a question"
+                    "Please enter a question."
 
             })
 
 
-        # =========================================
-        # CHECK PDF
-        # =========================================
+        # -------------------------------------------------
+        # CHECK PDF UPLOAD
+        # -------------------------------------------------
 
-        if not pdf_chunks or faiss_index is None:
+        if (
+            not pdf_chunks
+            or faiss_index is None
+        ):
 
             return jsonify({
 
                 "success": False,
 
                 "message":
-                    "Please upload PDF files first"
+                    "Please upload PDF files first."
 
             })
 
 
-        # =========================================
-        # QUESTION EMBEDDING
-        # =========================================
+        # -------------------------------------------------
+        # CREATE QUESTION EMBEDDING
+        # -------------------------------------------------
 
-        question_embedding = model.encode(
+        question_embedding = (
+            create_embeddings(
 
-            [question],
+                [question],
 
-            convert_to_numpy=True
+                "RETRIEVAL_QUERY"
 
-        ).astype("float32")
+            )
+        )
 
 
-        # =========================================
-        # NORMALIZE
-        # =========================================
+        # -------------------------------------------------
+        # NORMALIZE QUESTION EMBEDDING
+        # -------------------------------------------------
 
         faiss.normalize_L2(
             question_embedding
         )
 
 
-        # =========================================
-        # FAISS SEARCH
-        # =========================================
+        # -------------------------------------------------
+        # SEARCH FAISS
+        # -------------------------------------------------
 
         k = min(
-
             5,
-
             len(pdf_chunks)
-
         )
 
 
-        scores, indices = faiss_index.search(
+        scores, indices = (
+            faiss_index.search(
 
-            question_embedding,
+                question_embedding,
 
-            k
+                k
 
+            )
         )
 
 
-        # =========================================
+        # -------------------------------------------------
         # SIMILARITY THRESHOLD
-        # =========================================
+        # -------------------------------------------------
 
-        SIMILARITY_THRESHOLD = 0.35
+        similarity_threshold = 0.35
 
-
-        # =========================================
-        # RELEVANT DATA
-        # =========================================
 
         relevant_chunks = []
 
@@ -514,41 +647,35 @@ def ask_question():
 
         source_pages = []
 
+        valid_scores = []
 
-        # =========================================
-        # FILTER SEARCH RESULTS
-        # =========================================
+
+        # -------------------------------------------------
+        # GET RELEVANT CHUNKS
+        # -------------------------------------------------
 
         for i in range(k):
 
-            index = indices[0][i]
+
+            index = int(
+                indices[0][i]
+            )
+
 
             score = float(
                 scores[0][i]
             )
 
 
-            # -------------------------------------
-            # Invalid index
-            # -------------------------------------
-
             if index < 0:
 
                 continue
 
 
-            # -------------------------------------
-            # Ignore low similarity
-            # -------------------------------------
-
-            if score < SIMILARITY_THRESHOLD:
+            if score < similarity_threshold:
 
                 continue
 
-
-            # -------------------------------------
-            # Store relevant chunk
-            # -------------------------------------
 
             relevant_chunks.append(
                 pdf_chunks[index]
@@ -565,11 +692,33 @@ def ask_question():
             )
 
 
-        # =========================================
-        # NO RELEVANT RESULT
-        # =========================================
+            valid_scores.append(
+                score
+            )
+
+
+        # -------------------------------------------------
+        # ANSWER NOT FOUND
+        # -------------------------------------------------
 
         if not relevant_chunks:
+
+
+            if language == "ta-IN":
+
+                not_found = (
+                    "மன்னிக்கவும், பதிவேற்றிய PDF-களில் "
+                    "இந்த கேள்விக்கான பதிலை "
+                    "கண்டுபிடிக்க முடியவில்லை."
+                )
+
+            else:
+
+                not_found = (
+                    "Sorry, I could not find "
+                    "the answer in the uploaded PDFs."
+                )
+
 
             return jsonify({
 
@@ -579,20 +728,20 @@ def ask_question():
                     question,
 
                 "answer":
-                    "Sorry, I could not find the answer in the uploaded PDFs.",
+                    not_found,
 
-                "sources": [],
+                "sources":
+                    [],
 
-                "pages": [],
-
-                "similarity": 0
+                "similarity":
+                    0
 
             })
 
 
-        # =========================================
+        # =================================================
         # CREATE CONTEXT
-        # =========================================
+        # =================================================
 
         context_parts = []
 
@@ -601,76 +750,157 @@ def ask_question():
             len(relevant_chunks)
         ):
 
+
             context_parts.append(
 
                 f"Source: {source_names[i]}\n"
+
                 f"Page: {source_pages[i]}\n"
+
                 f"Content: {relevant_chunks[i]}"
 
             )
 
 
-        context = "\n\n".join(
-            context_parts
+        context = (
+            "\n\n".join(
+                context_parts
+            )
         )
 
 
-        # =========================================
+        # =================================================
+        # LANGUAGE INSTRUCTION
+        # =================================================
+
+        if language == "ta-IN":
+
+
+            language_instruction = """
+
+Answer ONLY in natural Tamil.
+
+The answer must be a clear Tamil
+sentence or short paragraph.
+
+Do not translate the question
+into English.
+
+Do not include English unless
+an English technical term is necessary.
+
+"""
+
+
+        else:
+
+
+            language_instruction = """
+
+Answer ONLY in clear English.
+
+The answer must be a clear English
+sentence or short paragraph.
+
+"""
+
+
+        # =================================================
         # GEMINI PROMPT
-        # =========================================
+        # =================================================
 
         prompt = f"""
-You are DocuMind AI, an intelligent PDF question answering assistant.
 
-Use ONLY the information provided in the PDF content below.
+You are DocuMind AI,
+an intelligent PDF question answering assistant.
+
+Use ONLY the information provided
+in the PDF content below.
 
 PDF CONTENT:
 
 {context}
 
+
 USER QUESTION:
 
 {question}
 
-RULES:
 
-1. Give only the final answer.
-2. Do not repeat the question.
-3. Do not mention FAISS.
-4. Do not mention Gemini.
-5. Do not mention the PDF context.
-6. Do not invent information.
-7. Keep the answer clear and simple.
-8. Answer only using relevant information.
-9. If the answer is not available in the provided content, say:
+RESPONSE LANGUAGE:
 
-"Sorry, I could not find the answer in the uploaded PDFs."
+{language_instruction}
+
+
+STRICT RULES:
+
+1. Give ONLY the final answer.
+
+2. Do NOT repeat the user's question.
+
+3. Do NOT mention FAISS.
+
+4. Do NOT mention Gemini.
+
+5. Do NOT mention retrieval.
+
+6. Do NOT mention embeddings.
+
+7. Do NOT mention internal processing.
+
+8. Do NOT mention the PDF context.
+
+9. Do NOT invent information.
+
+10. Answer only from the relevant
+PDF content.
+
+11. Keep the answer simple and natural.
+
+12. Return a sentence or short paragraph.
+
+13. Do NOT return unrelated questions
+or answers.
+
+14. Do NOT give multiple unrelated
+answers.
+
+15. If the answer is not available
+in the supplied PDF content, use:
+
+Tamil:
+"மன்னிக்கவும், பதிவேற்றிய PDF-களில்
+இந்த கேள்விக்கான பதிலை கண்டுபிடிக்க முடியவில்லை."
+
+English:
+"Sorry, I could not find the answer
+in the uploaded PDFs."
+
 """
 
 
-        # =========================================
-        # GEMINI
-        # =========================================
+        # =================================================
+        # GEMINI GENERATION
+        # =================================================
 
         response = client.models.generate_content(
 
-            model="gemini-3.8-flash",
+            model=GENERATION_MODEL,
 
             contents=prompt
 
         )
 
 
-        # =========================================
-        # ANSWER
-        # =========================================
+        answer = (
+            response.text
+            or ""
+        ).strip()
 
-        answer = response.text.strip()
 
-
-        # =========================================
-        # UNIQUE SOURCE + PAGE
-        # =========================================
+        # =================================================
+        # CREATE SOURCE DETAILS
+        # =================================================
 
         source_details = []
 
@@ -679,18 +909,14 @@ RULES:
             len(source_names)
         ):
 
-            source = source_names[i]
-
-            page = source_pages[i]
-
 
             detail = {
 
                 "file":
-                    source,
+                    source_names[i],
 
                 "page":
-                    page
+                    source_pages[i]
 
             }
 
@@ -702,37 +928,20 @@ RULES:
                 )
 
 
-        # =========================================
+        # =================================================
         # BEST SIMILARITY
-        # =========================================
+        # =================================================
 
-        valid_scores = []
-
-
-        for i in range(k):
-
-            index = indices[0][i]
-
-            score = float(
-                scores[0][i]
-            )
+        best_similarity = (
+            max(valid_scores)
+            if valid_scores
+            else 0
+        )
 
 
-            if index >= 0 and score >= SIMILARITY_THRESHOLD:
-
-                valid_scores.append(
-                    score
-                )
-
-
-        best_similarity = max(
-            valid_scores
-        ) if valid_scores else 0
-
-
-        # =========================================
-        # RETURN RESULT
-        # =========================================
+        # =================================================
+        # RETURN ANSWER
+        # =================================================
 
         return jsonify({
 
@@ -758,6 +967,7 @@ RULES:
 
     except Exception as e:
 
+
         return jsonify({
 
             "success": False,
@@ -768,9 +978,9 @@ RULES:
         })
 
 
-# =====================================================
-# 8. RUN FLASK
-# =====================================================
+# =========================================================
+# RUN FLASK
+# =========================================================
 
 if __name__ == "__main__":
 
